@@ -48,5 +48,84 @@
     "kr_slang": "꾸안꾸",
     "meaning": "꾸민 듯 안 꾸민 듯",
     "eng_equivalent": ["Effortlessly stylish", "I woke up like this"]
+  },
+  {
+    "kr_slang": "먹튀",
+    "meaning": "먹고 튀기 — 이익만 챙기고 책임지지 않고 떠나는 행동",
+    "eng_equivalent": [
+      "Hit and run",
+      "Take the money and run"
+    ]
+  },
+  {
+    "kr_slang": "문찐",
+    "meaning": "문화 찐따 — 유행에 뒤처진 사람",
+    "eng_equivalent": [
+      "Out of touch",
+      "Not trendy"
+    ]
+  },
+  {
+    "kr_slang": "내로남불",
+    "meaning": "내가 하면 로맨스, 남이 하면 불륜 — 이중 잣대를 비판하는 말",
+    "eng_equivalent": [
+      "Double standards",
+      "Hypocrisy"
+    ]
+  },
+  {
+    "kr_slang": "단짠",
+    "meaning": "단맛과 짠맛 — 단짠단짠한 음식 조합을 의미",
+    "eng_equivalent": [
+      "Sweet and salty combo"
+    ]
+  },
+  {
+    "kr_slang": "사바사",
+    "meaning": "사람 by 사람 — 사람마다 다른 상황을 의미",
+    "eng_equivalent": [
+      "Depends on the person",
+      "Case-by-case"
+    ]
+  },
+  {
+    "kr_slang": "안물안궁",
+    "meaning": "안 물었고 안 궁금해 — 관심 없음 표현",
+    "eng_equivalent": [
+      "Didn’t ask, don’t care",
+      "Not interested"
+    ]
+  },
+  {
+    "kr_slang": "이생망",
+    "meaning": "이번 생은 망했다 — 현재 인생에 절망할 때 쓰는 표현",
+    "eng_equivalent": [
+      "My life is over",
+      "This life is doomed"
+    ]
+  },
+  {
+    "kr_slang": "웃프다",
+    "meaning": "웃기지만 슬프다 — 웃기면서도 슬픈 상황",
+    "eng_equivalent": [
+      "Funny but sad",
+      "Bittersweet"
+    ]
+  },
+  {
+    "kr_slang": "텅장",
+    "meaning": "텅 빈 통장 — 잔고가 0원인 상태",
+    "eng_equivalent": [
+      "Empty bank account",
+      "Broke"
+    ]
+  },
+  {
+    "kr_slang": "지못미",
+    "meaning": "지켜주지 못해서 미안해 — 안타까운 상황에서의 표현",
+    "eng_equivalent": [
+      "Sorry I couldn’t protect you",
+      "Didn’t save you in time"
+    ]
   }
 ]
