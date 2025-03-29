@@ -48,14 +48,14 @@ export default function Home() {
       {error && <p className="text-red-500 font-semibold mb-4">{error}</p>}
 
       {result && (
-        <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md text-gray-800">
-          <h2 className="text-xl font-bold mb-2">🧩 {result.kr_slang}</h2>
-          <p className="mb-2">💬 <strong>의미:</strong> {result.meaning}</p>
-          <div>
-            🌍 <strong>영어 표현:</strong>
-            <ul className="list-disc list-inside mt-1 text-sm">
+        <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md text-gray-800 border-l-8 border-indigo-400">
+          <h2 className="text-2xl font-extrabold mb-2">🧩 {result.kr_slang}</h2>
+          <p className="mb-2 text-sm">📖 <span className="font-semibold">뜻:</span> {result.meaning}</p>
+          <div className="mt-2">
+            <p className="text-sm font-semibold">🌍 글로벌 표현:</p>
+            <ul className="list-disc list-inside mt-1 text-sm text-gray-600">
               {result.eng_equivalent.map((item: string, idx: number) => (
-                <li key={idx}>{item}</li>
+                <li key={idx}>🌐 {item}</li>
               ))}
             </ul>
           </div>
