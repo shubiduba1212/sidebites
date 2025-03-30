@@ -65,7 +65,8 @@ export default function Home() {
 
       <button
         className="mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition"
-        onClick={() => setShowModal(true)}>
+        onClick={() => setShowModal(true)}
+      >
         🎨 4컷 만화 생성
       </button>
 
