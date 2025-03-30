@@ -6,6 +6,7 @@ export default function Home() {
   const [query, setQuery] = useState('')
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState('')
+  const [showModal, setShowModal] = useState(false)
 
   const handleSearch = async () => {
     if (!query) return
@@ -61,6 +62,29 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      <button
+        className="mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition"
+        onClick={() => setShowModal(true)}>
+        🎨 4컷 만화 생성
+      </button>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 shadow-lg w-80">
+            <h2 className="text-lg font-bold mb-2">🖼️ 만화 생성 준비 중!</h2>
+            <p className="text-sm text-gray-600">이 줄임말을 바탕으로 곧 AI 이미지가 생성될 예정이에요.</p>
+            <button
+              className="mt-4 px-4 py-2 text-sm rounded bg-indigo-500 text-white hover:bg-indigo-600"
+              onClick={() => setShowModal(false)}
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
+
+
     </main>
   )
 }
