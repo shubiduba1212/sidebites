@@ -26,6 +26,24 @@ export default function Home() {
     }
   }
 
+  const generateComicPrompt = async (query : string) => {
+    try {
+      const res = await fetch(`http://localhost:8000/generate-comic?query=${encodeURIComponent(query)}`);
+      const data = await res.json();
+      return data.prompt;
+    } catch (err) {
+      console.error("4컷 만화 프롬프트 생성 실패",err);
+      return null;
+    }
+  };
+
+  const handleGenerateComic = async() => {
+    const prompt = await generateComicPrompt(result.kr_slang);
+    if (prompt) {
+      alert("🧠 생성된 프롬프트:\n\n" + prompt);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-pink-100 to-blue-100 p-8 flex flex-col items-center">
       <h1 className="text-3xl font-bold mb-8 text-gray-800">✨ 줄마르: 줄임말을 번역해드립니다 ✨</h1>
@@ -65,7 +83,8 @@ export default function Home() {
 
       <button
         className="mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition"
-        onClick={() => setShowModal(true)}
+        // onClick={() => setShowModal(true)}
+        onClick={handleGenerateComic}
       >
         🎨 4컷 만화 생성
       </button>

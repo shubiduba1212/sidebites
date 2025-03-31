@@ -1,6 +1,6 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
-from app.routers import slang
+from app.routers import slang, comic
 
 app = FastAPI()
 
@@ -14,6 +14,7 @@ app.add_middleware(
 )
 
 app.include_router(slang.router)
+app.include_router(comic.router)
 
 # @app.get("/")
 # def read_root():
