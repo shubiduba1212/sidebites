@@ -13,8 +13,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(slang.router)
-app.include_router(comic.router)
+app.include_router(slang.router, prefix="/slang")
+app.include_router(comic.router, prefix="/comic")
 
 # @app.get("/")
 # def read_root():
