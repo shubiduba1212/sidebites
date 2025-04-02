@@ -1,7 +1,9 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from app.routers import slang, comic
+from dotenv import load_dotenv
 
+load_dotenv()
 app = FastAPI()
 
 # 🔥 CORS 설정 추가
