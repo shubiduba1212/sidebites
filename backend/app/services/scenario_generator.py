@@ -1,9 +1,11 @@
 from openai import OpenAI
+from dotenv import load_dotenv
 import os
 from typing import List
 
-client = OpenAI(api_keys=os.getenv("OPENAI_API_KEY"))
+load_dotenv()
 
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 def generate_scenario_from_slang(slang : str) -> List[str]:
   """
   줄임말(slang)을 입력받아 4컷 만화용 시나리오 4줄을 생성합니다.
