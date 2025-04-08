@@ -17,9 +17,9 @@ class PromptRequest(BaseModel):
 class ComicResponse(BaseModel):
     scenario: List[str]
     prompts: List[str]
-    images: List[str]  # base64 인코딩된 이미지
+    image_urls: List[str]  # base64 인코딩된 이미지
 
-@router.post("/generate", response_model=Dict)
+@router.post("/generate", response_model=ComicResponse)
 def generate_comic(request: PromptRequest):
     try:
         slang = request.prompt
@@ -32,20 +32,21 @@ def generate_comic(request: PromptRequest):
 
         # 3. 프롬프트로 이미지 생성 (Colab 서버 연동)
         # image_urls: List[str] = generate_images_from_prompts(prompts, colab_url=COLAB_URL)
-        images: List[Image.Image] = generate_images_from_prompts(prompts, COLAB_URL)
+        # images: List[Image.Image] = generate_images_from_prompts(prompts, COLAB_URL)
+        images: List[str] = generate_images_from_prompts(prompts, COLAB_URL)
 
         # 4. 통합 응답 반환
-        image_base64_list = []
-        for img in images:
-            buf = io.BytesIO()
-            img.save(buf, format="PNG")
-            img_bytes = base64.b64encode(buf.getvalue()).decode("utf-8")
-            image_base64_list.append(img_bytes)
+        # image_base64_list = []
+        # for img in images:
+        #     buf = io.BytesIO()
+        #     img.save(buf, format="PNG")
+        #     img_bytes = base64.b64encode(buf.getvalue()).decode("utf-8")
+        #     image_base64_list.append(img_bytes)
 
         return ComicResponse(
             scenario=scenario_lines,
             prompts=prompts,
-            images=image_base64_list
+            image_urls=images,
         )
         # return {
         #     "slang": slang,
