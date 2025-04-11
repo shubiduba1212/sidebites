@@ -1,3 +1,5 @@
+![status](https://img.shields.io/badge/status-in%20progress-yellow)  
+
 ## 🔧 진행 상황
 
 - [x] 줄임말 → 시나리오 변환
