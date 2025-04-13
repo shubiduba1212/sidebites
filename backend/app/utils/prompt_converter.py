@@ -32,6 +32,7 @@ def translate_and_style(korean_text: str) -> str:
     )
 
     return response.choices[0].message.content.strip()
+    print(f"[✅ 변환된 프롬프트] {result}")  # ✅ 이 줄 추가
 
 # ✅ 테스트용 (직접 실행 시)
 if __name__ == "__main__":
