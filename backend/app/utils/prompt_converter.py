@@ -7,10 +7,15 @@ load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+def log_prompt_process(step: str, content: str):
+    print(f"[{step}] {content}")
+
 def translate_and_style(korean_text: str) -> str:
     # ✅ 입력 유효성 검사
     if not korean_text or len(korean_text.strip()) < 2:
         return "Please provide a more meaningful slang term."
+    
+    log_prompt_process("🔍 입력된 문장", korean_text)
     
     """
     한글 시나리오 문장을 영어로 번역하고 스타일/분위기 요소를 추가하여
