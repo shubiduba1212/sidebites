@@ -21,23 +21,30 @@ def translate_and_style(korean_text: str) -> str:
     한글 시나리오 문장을 영어로 번역하고 스타일/분위기 요소를 추가하여
     이미지 생성용 프롬프트로 변환합니다.
     """
-    system_prompt = (
-        "You are a helpful assistant that converts Korean comic panel scenes into detailed English prompts for image generation using Stable Diffusion. "
-        "Make the output descriptive, visually rich, and suitable for high-quality AI-generated illustrations."
-    )
+    try:
+        system_prompt = (
+            "You are a helpful assistant that converts Korean comic panel scenes into detailed English prompts for image generation using Stable Diffusion. "
+            "Make the output descriptive, visually rich, and suitable for high-quality AI-generated illustrations."
+        )
 
-    user_prompt = f"Convert the following Korean comic panel description into an English prompt with a cinematic visual style:\n'{korean_text}'"
+        user_prompt = f"Convert the following Korean comic panel description into an English prompt with a cinematic visual style:\n'{korean_text}'"
 
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ]
-    )
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ]
+        )
 
-    return response.choices[0].message.content.strip()
-    print(f"[✅ 변환된 프롬프트] {result}")  # ✅ 이 줄 추가
+        result = response.choices[0].message.content.strip()
+        log_prompt_process("✅ 변환된 프롬프트", result)
+        print(f"[✅ 변환된 프롬프트] {result}")  # ✅ 이 줄 추가
+        return result
+
+    except Exception as e:
+        log_prompt_process("❌ 변환 실패", str(e))
+        return "An error occurred while generating the prompt. Please try again later."
 
 # ✅ 테스트용 (직접 실행 시)
 if __name__ == "__main__":
