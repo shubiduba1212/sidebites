@@ -41,7 +41,8 @@ def translate_and_style(korean_text: str) -> str:
             "- For \"사바사\" (case-by-case): Illustrate a food tasting event where people react completely differently to the same dish — some ecstatic, others grimacing — while an observer chuckles and remarks, \"Truly a matter of personal taste.\"\n\n"
             "Important:\n"
             "- If a Korean slang phrase has a strong emotional punch (e.g., \"킹받네\", \"이생망\", \"텅장\"), exaggerate the character's emotional expression to make it visually engaging.\n"
-            "- Preserve unique Korean expressions like \"안물안궁\", \"문찐\", and others if possible, or translate them naturally while maintaining their cultural flavor.\n\n"
+            "- Preserve unique Korean expressions like \"안물안궁\", \"문찐\", and others if possible, or translate them naturally while maintaining their cultural flavor.\n"
+            "- For slang like \"갑분싸\", avoid depicting actual arguments or fights. Focus instead on emotional awkwardness, heavy silence, or social tension without escalation to conflict.\n\n"
             
             "Structure:\n"
             "- If the situation involves a progression of emotions or actions (e.g., joy → surprise → disappointment), divide the scene into 3–4 comic-style panels.\n"

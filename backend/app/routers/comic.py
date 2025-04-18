@@ -16,7 +16,7 @@ class PromptRequest(BaseModel):
 
 class ComicResponse(BaseModel):
     scenario: List[str]
-    prompts: List[str]
+    panel_texts: List[str]
     image_urls: List[str]  # base64 인코딩된 이미지
 
 @router.post("/generate", response_model=ComicResponse)
@@ -45,7 +45,7 @@ def generate_comic(request: PromptRequest):
 
         return ComicResponse(
             scenario=scenario_lines,
-            prompts=prompts,
+            panel_texts=prompts,
             image_urls=images,
         )
         # return {
