@@ -30,36 +30,55 @@ def generate_comic(request: PromptRequest):
         # 2. 각 시나리오 라인 → 프롬프트 변환
         prompts: List[str] = [translate_and_style(line) for line in scenario_lines]
 
-        # 3. 프롬프트로 이미지 생성 (Colab 서버 연동)
-        # image_urls: List[str] = generate_images_from_prompts(prompts, colab_url=COLAB_URL)
-        # images: List[Image.Image] = generate_images_from_prompts(prompts, COLAB_URL)
+        # (수정) Panel 분리 로직
+        split_panel_texts = []
+        for prompt in prompts:
+            # "Panel 1:", "Panel 2:", ... 패턴이 있는 경우
+            if "Panel 1" in prompt:
+                # 'Panel '을 기준으로 쪼갠 다음, 다시 각 Panel 별로 잘라줌
+                parts = prompt.split("Panel ")[1:]  # 첫 번째는 '1: 내용' 이런 식
+                for part in parts:
+                    idx_and_text = part.split(":", 1)
+                    if len(idx_and_text) == 2:
+                        panel_content = idx_and_text[1].strip()
+                        if panel_content:  # 내용이 있을 때만 추가
+                            split_panel_texts.append(panel_content)
+            else:
+                # "Panel" 구분 없으면 그냥 전체 문장 추가
+                split_panel_texts.append(prompt.strip())
+
+        if len(split_panel_texts) > 4:
+            panel_texts = split_panel_texts[:4]
+        else:
+            panel_texts = split_panel_texts
+
+        # 3. 프롬프트로 이미지 생성 (Colab 서버 연동)        
         images: List[str] = generate_images_from_prompts(prompts, COLAB_URL)
 
-        # 4. 통합 응답 반환
-        # image_base64_list = []
+        # 4. 통합 응답 반환        
+        return ComicResponse(
+            scenario=scenario_lines,
+            panel_texts=panel_texts,
+            image_urls=images,
+        )       
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# image_urls: List[str] = generate_images_from_prompts(prompts, colab_url=COLAB_URL)
+        # images: List[Image.Image] = generate_images_from_prompts(prompts, COLAB_URL)
+# image_base64_list = []
         # for img in images:
         #     buf = io.BytesIO()
         #     img.save(buf, format="PNG")
         #     img_bytes = base64.b64encode(buf.getvalue()).decode("utf-8")
         #     image_base64_list.append(img_bytes)
-
-        return ComicResponse(
-            scenario=scenario_lines,
-            panel_texts=prompts,
-            image_urls=images,
-        )
-        # return {
+# return {
         #     "slang": slang,
         #     "scenario": scenario_lines,
         #     "prompts": prompts,
         #     "images": image_urls
         # }
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-
 # import requests
 # from fastapi import APIRouter, Body, HTTPException
 # from pydantic import BaseModel
