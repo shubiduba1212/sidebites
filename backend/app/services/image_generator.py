@@ -6,14 +6,20 @@ import io
 def generate_images_from_prompts(prompts: List[str], colab_url:str) -> List[str]:
   print("[백엔드] 생성할 프롬프트 리스트:", prompts)
   try:
-      response = requests.post(f"{colab_url}/generate", json={"prompts": prompts}, timeout=120)
+      response = requests.post(
+          f"{colab_url}/generate",
+          headers={"Content-Type": "application/json"},  # 💥 강제 추가
+          json={"prompts": prompts},
+          timeout=120
+      )
   except Exception as e:
       print("[백엔드] requests.post 실패:", str(e))
-      raise 
+      raise
+
   print("📤 Flask에 요청 보냄")
   if response.status_code != 200:
-    raise RuntimeError(f"이미지 생성 실패 : {response.text}")
-  
+      raise RuntimeError(f"이미지 생성 실패 : {response.text}")
+
   image_urls = response.json().get("images", [])
   return image_urls
 # def generate_images_from_prompts(prompts: List[str], colab_url:str) -> List[Image.Image]:

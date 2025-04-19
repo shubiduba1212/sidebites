@@ -1,9 +1,6 @@
 from fastapi import APIRouter, Body, HTTPException
 from pydantic import BaseModel
-from typing import List, Dict
-import base64
-import io
-from PIL import Image
+from typing import List
 from ..services.scenario_generator import generate_scenario_from_slang
 from ..utils.prompt_converter import translate_and_style
 from ..services.image_generator import generate_images_from_prompts
@@ -12,66 +9,136 @@ from ..services.colab_client import COLAB_URL
 router = APIRouter()
 
 class PromptRequest(BaseModel):
-  prompt : str
+    prompt : str
 
 class ComicResponse(BaseModel):
     scenario: List[str]
     panel_texts: List[str]
-    image_urls: List[str]  # base64 인코딩된 이미지
+    image_urls: List[str]
+
+MAX_PROMPT_TOKENS = 77  # Stable Diffusion 허용 최대 토큰 수
+
+def count_tokens(text: str) -> int:
+    return len(text.split())
 
 @router.post("/generate", response_model=ComicResponse)
 def generate_comic(request: PromptRequest):
     try:
-        slang = request.prompt
+        # 시나리오/프롬프트 생성 안하고, 테스트용 고정 텍스트 사용
+        panel_texts = [
+            "A cat walks into a karaoke room.",
+            "The cat grabs the microphone.",
+            "The audience is shocked.",
+            "The cat finishes with a proud look."
+        ]
 
-        # 1. 시나리오 생성
-        scenario_lines: List[str] = generate_scenario_from_slang(slang)
-
-        # 2. 각 시나리오 라인 → 프롬프트 변환
-        # prompts: List[str] = [translate_and_style(line) for line in scenario_lines]
-        prompts: List[str] = []
-        for line in scenario_lines:
-            prompt = translate_and_style(line)
-            if "An error occurred while generating the prompt" in prompt:
-                raise HTTPException(status_code=500, detail="OpenAI API 호출 실패: 프롬프트 생성 실패")
-            prompts.append(prompt)
-        print("[백엔드] COLAB_URL:", COLAB_URL)
-        print("[백엔드] 생성할 프롬프트 리스트:", prompts)      
-
-        # (수정) Panel 분리 로직
-        split_panel_texts = []
-        for prompt in prompts:
-            # "Panel 1:", "Panel 2:", ... 패턴이 있는 경우
-            if "Panel 1" in prompt:
-                # 'Panel '을 기준으로 쪼갠 다음, 다시 각 Panel 별로 잘라줌
-                parts = prompt.split("Panel ")[1:]  # 첫 번째는 '1: 내용' 이런 식
-                for part in parts:
-                    idx_and_text = part.split(":", 1)
-                    if len(idx_and_text) == 2:
-                        panel_content = idx_and_text[1].strip()
-                        if panel_content:  # 내용이 있을 때만 추가
-                            split_panel_texts.append(panel_content)
-            else:
-                # "Panel" 구분 없으면 그냥 전체 문장 추가
-                split_panel_texts.append(prompt.strip())
-
-        if len(split_panel_texts) > 4:
-            panel_texts = split_panel_texts[:4]
-        else:
-            panel_texts = split_panel_texts
+        prompts = panel_texts  # 바로 panel_texts를 prompts로 사용
+        print("[백엔드] 테스트용 프롬프트:", prompts)
 
         # 3. 프롬프트로 이미지 생성 (Colab 서버 연동)        
-        images: List[str] = generate_images_from_prompts(panel_texts, COLAB_URL)
+        images: List[str] = generate_images_from_prompts(prompts, COLAB_URL)
 
         # 4. 통합 응답 반환        
         return ComicResponse(
-            scenario=scenario_lines,
+            scenario=["Test Scenario"],
             panel_texts=panel_texts,
             image_urls=images,
-        )       
+        )
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+
+# router = APIRouter()
+
+# class PromptRequest(BaseModel):
+#   prompt : str
+
+# class ComicResponse(BaseModel):
+#     scenario: List[str]
+#     panel_texts: List[str]
+#     image_urls: List[str]  # base64 인코딩된 이미지
+
+# @router.post("/generate", response_model=ComicResponse)
+# def generate_comic(request: PromptRequest):
+#     try:
+#         slang = request.prompt
+
+#         # 테스트용: OpenAI 호출 없이 임의 프롬프트 하드코딩
+#         panel_texts = [
+#             "A cat walks into a karaoke room filled with neon lights.",  # 짧은 프롬프트 (OK)
+#             "The cat jumps on the stage and grabs the microphone, shining under colorful lights.",  # 짧은 프롬프트 (OK)
+#             "The audience, shocked by the cat’s sudden performance, gasps and turns their heads.",  # 짧은 프롬프트 (OK)
+#             # 긴 프롬프트 (故의도적으로 77 토큰 넘길 수 있게 긴 문장 추가)
+#             "Under the glaring colorful spotlights and amidst the swirling disco fog, the charismatic cat launches into an energetic and show-stopping rendition of a pop anthem, its tiny paws theatrically mimicking a superstar's gestures, its eyes closed passionately, basking in the thunderous applause echoing through the neon-lit venue, leaving every audience member in awe and admiration beyond imagination."
+#         ]
+
+#         print("[백엔드] 테스트용 panel_texts:", panel_texts)
+
+#         prompts = panel_texts
+
+#         # Flask Colab 서버로 전송
+#         images: List[str] = generate_images_from_prompts(prompts, COLAB_URL)
+
+#         # 통합 응답
+#         return ComicResponse(
+#             scenario=["테스트 시나리오 1", "테스트 시나리오 2", "테스트 시나리오 3", "테스트 시나리오 4"],
+#             panel_texts=panel_texts,
+#             image_urls=images,
+#         )
+
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
+
+    #     # 1. 시나리오 생성
+    #     scenario_lines: List[str] = generate_scenario_from_slang(slang)
+
+    #     # 2. 각 시나리오 라인 → 프롬프트 변환
+    #     # prompts: List[str] = [translate_and_style(line) for line in scenario_lines]
+    #     prompts: List[str] = []
+    #     for line in scenario_lines:
+    #         prompt = translate_and_style(line)
+    #         if "An error occurred while generating the prompt" in prompt:
+    #             raise HTTPException(status_code=500, detail="OpenAI API 호출 실패: 프롬프트 생성 실패")
+    #         prompts.append(prompt)
+    #     print("[백엔드] COLAB_URL:", COLAB_URL)
+    #     print("[백엔드] 생성할 프롬프트 리스트:", prompts)      
+
+    #     # (수정) Panel 분리 로직
+    #     split_panel_texts = []
+    #     for prompt in prompts:
+    #         # "Panel 1:", "Panel 2:", ... 패턴이 있는 경우
+    #         if "Panel 1" in prompt:
+    #             # 'Panel '을 기준으로 쪼갠 다음, 다시 각 Panel 별로 잘라줌
+    #             parts = prompt.split("Panel ")[1:]  # 첫 번째는 '1: 내용' 이런 식
+    #             for part in parts:
+    #                 idx_and_text = part.split(":", 1)
+    #                 if len(idx_and_text) == 2:
+    #                     panel_content = idx_and_text[1].strip()
+    #                     if panel_content:  # 내용이 있을 때만 추가
+    #                         split_panel_texts.append(panel_content)
+    #         else:
+    #             # "Panel" 구분 없으면 그냥 전체 문장 추가
+    #             split_panel_texts.append(prompt.strip())
+
+    #     if len(split_panel_texts) > 4:
+    #         panel_texts = split_panel_texts[:4]
+    #     else:
+    #         panel_texts = split_panel_texts
+
+    #     # 3. 프롬프트로 이미지 생성 (Colab 서버 연동)        
+    #     images: List[str] = generate_images_from_prompts(panel_texts, COLAB_URL)
+
+    #     # 4. 통합 응답 반환        
+    #     return ComicResponse(
+    #         scenario=scenario_lines,
+    #         panel_texts=panel_texts,
+    #         image_urls=images,
+    #     )       
+
+    # except Exception as e:
+    #     raise HTTPException(status_code=500, detail=str(e))
 
 # image_urls: List[str] = generate_images_from_prompts(prompts, colab_url=COLAB_URL)
         # images: List[Image.Image] = generate_images_from_prompts(prompts, COLAB_URL)
