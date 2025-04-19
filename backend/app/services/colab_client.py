@@ -6,10 +6,9 @@ load_dotenv()
 COLAB_URL = os.getenv("COLAB_FLASK_URL")
 ngrok_url = COLAB_URL + "/generate"
 
-def request_colab_images(prompt : str):
+def request_colab_images(prompts : list[str]):
   response = requests.post(
-    # "http://<NGROK_URL>/generate",
     ngrok_url,
-    json={"prompt" : prompt}
+    json={"prompts" : prompts}
   )
   return response.json().get("images", [])

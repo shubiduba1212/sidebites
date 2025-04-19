@@ -7,6 +7,7 @@ load_dotenv()
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 def generate_scenario_from_slang(slang : str) -> List[str]:
+  print("[백엔드] generate_scenario_from_slang 호출됨. slang:", slang)
   if slang == "갑분싸":
         return [
             "친구들끼리 카페에서 신나게 웃고 떠드는 장면",

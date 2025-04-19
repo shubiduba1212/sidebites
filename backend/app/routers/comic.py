@@ -28,7 +28,15 @@ def generate_comic(request: PromptRequest):
         scenario_lines: List[str] = generate_scenario_from_slang(slang)
 
         # 2. 각 시나리오 라인 → 프롬프트 변환
-        prompts: List[str] = [translate_and_style(line) for line in scenario_lines]
+        # prompts: List[str] = [translate_and_style(line) for line in scenario_lines]
+        prompts: List[str] = []
+        for line in scenario_lines:
+            prompt = translate_and_style(line)
+            if "An error occurred while generating the prompt" in prompt:
+                raise HTTPException(status_code=500, detail="OpenAI API 호출 실패: 프롬프트 생성 실패")
+            prompts.append(prompt)
+        print("[백엔드] COLAB_URL:", COLAB_URL)
+        print("[백엔드] 생성할 프롬프트 리스트:", prompts)      
 
         # (수정) Panel 분리 로직
         split_panel_texts = []
@@ -53,7 +61,7 @@ def generate_comic(request: PromptRequest):
             panel_texts = split_panel_texts
 
         # 3. 프롬프트로 이미지 생성 (Colab 서버 연동)        
-        images: List[str] = generate_images_from_prompts(prompts, COLAB_URL)
+        images: List[str] = generate_images_from_prompts(panel_texts, COLAB_URL)
 
         # 4. 통합 응답 반환        
         return ComicResponse(

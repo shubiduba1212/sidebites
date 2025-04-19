@@ -47,7 +47,9 @@ export default function ComicPage() {
       {panelTexts.length > 0 && (
         <div className='grid grid-cols-2 gap-4 mt-6'>
           {panelTexts.map((text, idx) => (
-            <div key={idx} className='border p-4 rounded shadow'>
+            <div key={idx} className='border p-4 rounded shadow flex flex-col items-center'>
+              <img src={imageUrls[idx]} alt={`Panel ${idx + 1}`} className='mb-4 w-full h-auto object-cover rounded' />
+              {/* <img src={imageUrls[idx]} alt={`Panel ${idx + 1}`} className='mb-2 w-full h-auto rounded' /> */}
               <h2 className='text-lg font-bold mb-2'>Panel {idx + 1}</h2>
               <p className='text-gray-700 whitespace-pre-wrap'>{text}</p>
             </div>
