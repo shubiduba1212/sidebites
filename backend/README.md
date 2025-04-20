@@ -34,6 +34,7 @@
 2. 시나리오 4줄 생성 → 영어 스타일 변환
 3. Colab Flask 서버에 프롬프트 4개 요청 → 이미지 4장 생성
 4. 이미지 Base64 인코딩 후 JSON 응답
+5. (현재 Colab 서버는 ngrok URL을 통해 FastAPI에서 접근)
 
 ## 환경 변수
 - `.env` 파일에 `OPENAI_API_KEY` 저장
