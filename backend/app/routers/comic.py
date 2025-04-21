@@ -5,11 +5,12 @@ from ..services.scenario_generator import generate_scenario_from_slang
 from ..utils.prompt_converter import translate_and_style
 from ..services.image_generator import generate_images_from_prompts
 from ..services.colab_client import COLAB_URL
+import ast
 
 router = APIRouter()
 
 class PromptRequest(BaseModel):
-    prompt : str
+    prompt: str
 
 class ComicResponse(BaseModel):
     scenario: List[str]
@@ -24,28 +25,38 @@ def count_tokens(text: str) -> int:
 @router.post("/generate", response_model=ComicResponse)
 def generate_comic(request: PromptRequest):
     try:
-        # 시나리오/프롬프트 생성 안하고, 테스트용 고정 텍스트 사용
-        panel_texts = [
-            "A cat walks into a karaoke room.",
-            "The cat grabs the microphone.",
-            "The audience is shocked.",
-            "The cat finishes with a proud look."
-        ]
+        slang = request.prompt
+        print("[백엔드] 입력받은 줄임말:", slang)
 
-        prompts = panel_texts  # 바로 panel_texts를 prompts로 사용
-        print("[백엔드] 테스트용 프롬프트:", prompts)
+        # 1. 줄임말 → 시나리오 4줄 생성
+        scenario = generate_scenario_from_slang(slang)
+        if isinstance(scenario, str):
+            scenario = ast.literal_eval(scenario)
 
-        # 3. 프롬프트로 이미지 생성 (Colab 서버 연동)        
-        images: List[str] = generate_images_from_prompts(prompts, COLAB_URL)
+        # 2. 시나리오 4줄 → 영어 스타일 변환
+        panel_texts = []
 
-        # 4. 통합 응답 반환        
+        for line in scenario:
+            translated = translate_and_style(line)  # 한 줄씩 변환
+            if count_tokens(translated) > MAX_PROMPT_TOKENS:
+                print("[백엔드] 토큰수 초과로 트리밍:", translated)
+                translated = ' '.join(translated.split()[:MAX_PROMPT_TOKENS])
+            panel_texts.append(translated)
+
+        print("[백엔드] 변환된 패널 텍스트:", panel_texts)
+
+        # 3. 변환된 프롬프트로 이미지 생성 (Colab 서버 연동)
+        images: List[str] = generate_images_from_prompts(panel_texts, COLAB_URL)
+
+        # 4. 통합 응답 반환
         return ComicResponse(
-            scenario=["Test Scenario"],
+            scenario=scenario,
             panel_texts=panel_texts,
             image_urls=images,
         )
 
     except Exception as e:
+        print("[백엔드] 에러:", str(e))
         raise HTTPException(status_code=500, detail=str(e))
 
 
