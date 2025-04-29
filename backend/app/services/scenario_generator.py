@@ -44,11 +44,11 @@ def generate_scenario_from_slang(slang : str) -> List[str]:
       )
 
       content = response.choices[0].message.content
-      print("[generate_scenario_from_slang] OpenAI 응답:", content)
+      print("[시나리오 생성] OpenAI 응답:", content)
 
       # JSON 배열로 변환
       scenario_list = json.loads(content)
-      print("[generate_scenario_from_slang] 파싱된 시나리오 리스트:", scenario_list)
+      print("[시나리오 생성] 파싱 결과:", scenario_list)
 
       # 최종 결과 리스트 반환
       return scenario_list
