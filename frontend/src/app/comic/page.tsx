@@ -1,9 +1,10 @@
 "use client"
 
-import { useComicStore } from '@/store/useComicStore';
+import { useComicStore } from "../../store/useComicStore";
+import React from 'react'
 
 export default function ComicPage() {
-  const { slang, setSlang, scenario, panelTexts, imageUrls, isLoading, fetchComic} = useComicStore()  
+  const { slang, setSlang, scenario, panelTexts, imageUrls, isLoading, fetchComic} = useComicStore() 
 
   const handleGenerate = async () => {
     await fetchComic(slang);
