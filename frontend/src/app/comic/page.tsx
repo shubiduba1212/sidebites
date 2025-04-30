@@ -20,12 +20,12 @@ export default function ComicPage() {
           value={slang}
           onChange={(e) => setSlang(e.target.value)}
         />
-        <button className='bg-blue-500 text-white px-4 py-2 rounded' onClick={handleGenerate}>
-          생성하기
+        <button className='bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50' onClick={handleGenerate} disabled={isLoading}>
+          {isLoading ? "생성 중..." : "생성하기"}
         </button>
       </div>
 
-      {panelTexts.length > 0 && (
+      {Array.isArray(panelTexts) && panelTexts.length > 0 && (
         <div className='grid grid-cols-2 gap-4 mt-6'>
           {panelTexts.map((text, idx) => (
             <div key={idx} className='border p-4 rounded shadow flex flex-col items-center'>

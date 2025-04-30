@@ -33,8 +33,8 @@ export const useComicStore = create<ComicState>((set) => ({
       const data = await response.json()
       set({
         scenario: data.scenario,
-        panelTexts: data.panelText,
-        imageUrls: data.imageUrls,
+        panelTexts: data.panel_texts,
+        imageUrls: data.image_urls,
         isLoading: false,
       })
     } catch (error) {
