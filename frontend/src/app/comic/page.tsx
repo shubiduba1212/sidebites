@@ -1,32 +1,12 @@
 "use client"
 
-import React, { useState } from 'react'
-// import FourPanelCard from './components/FourPanelCard';
-// import { text } from 'stream/consumers';
+import { useComicStore } from '@/store/useComicStore';
 
 export default function ComicPage() {
-  const [slang, setSlang] = useState("");
-  const [panelTexts, setPanelTexts] = useState<string[]>([]);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const { slang, setSlang, scenario, panelTexts, imageUrls, isLoading, fetchComic} = useComicStore()  
 
   const handleGenerate = async () => {
-    const response = await fetch('http://localhost:8000/comic/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ prompt : slang }),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      console.log("[백엔드 응답 데이터]", data);
-      setPanelTexts(data.panel_texts);
-      setImageUrls(data.image_urls);      
-
-    } else {
-      console.error('Failed to generate comic:', response.statusText);
-    }
+    await fetchComic(slang);
   }
 
   return (
@@ -60,8 +40,31 @@ export default function ComicPage() {
   );
 }
 
+// const [slang, setSlang] = useState("");
+//   const [panelTexts, setPanelTexts] = useState<string[]>([]);
+//   const [imageUrls, setImageUrls] = useState<string[]>([]);
+// const handleGenerate = async () => {
+//   const response = await fetch('http://localhost:8000/comic/generate', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ prompt : slang }),
+//   });
 
+//   if (response.ok) {
+//     const data = await response.json();
+//     console.log("[백엔드 응답 데이터]", data);
+//     setPanelTexts(data.panel_texts);
+//     setImageUrls(data.image_urls);      
 
+//   } else {
+//     console.error('Failed to generate comic:', response.statusText);
+//   }
+// }
+
+// import FourPanelCard from './components/FourPanelCard';
+// import { text } from 'stream/consumers';
 // if (data.panel_texts && data.panel_texts.length > 0){
       //   const splitPanels = 
       //   typeof data.panel_texts[0] === 'string'
