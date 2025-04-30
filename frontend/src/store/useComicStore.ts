@@ -20,7 +20,7 @@ export const useComicStore = create<ComicState>((set) => ({
   fetchComic: async (slang) => {
     set({ isLoading: true })
     try {
-      const response = await fetch('api/comic/generate', {
+      const response = await fetch('http://localhost:8000/comic/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
